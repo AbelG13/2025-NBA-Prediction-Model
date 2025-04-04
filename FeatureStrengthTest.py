@@ -1,0 +1,60 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+
+# --- CONFIGURABLE PARAMS ---
+TARGET = 'PTS'
+FEATURE_COLUMNS = ['avg_fgm_5g', 'avg_ftm_5g', 'avg_fta_5g', 'avg_pts_5g', 'avg_min_5g', 
+'avg_fga_5g', 'std_fta_5g', 'OPP_DREB', 'OPP_BLK','home_or_away',
+'OPP_DEFLECTIONS','OPP_FG_PCT_RANK', 'avg_fga_5g_squared','avg_fga_5g_avg_pts_5g',
+'avg_fga_5g_avg_min_5g', 'std_fta_5g', 'OPP_DREB', 'OPP_BLK', 'OPP_DEFLECTIONS','OPP_FG_PCT_RANK']
+
+# --- MAIN FUNCTION ---
+def analyze_feature_strength(df):
+    """
+    Analyze the strength of features in a dataset.
+    
+    Args:
+        df (pd.DataFrame): The dataset to analyze.
+    """
+
+    # Drop rows with missing values in feature columns or target
+    df = df.dropna(subset=FEATURE_COLUMNS + [TARGET])
+    
+    # Correlation Matrix
+    print("\n--- Feature Correlation with Target ---")
+    corr = df[FEATURE_COLUMNS + [TARGET]].corr()[TARGET].sort_values(ascending=False)
+    print(corr)
+
+    # Plot Correlation Heatmap
+    plt.figure(figsize=(10, 6))
+    sns.heatmap(df[FEATURE_COLUMNS + [TARGET]].corr(), annot=True, fmt=".2f", cmap="coolwarm")
+    plt.title("Feature Correlation Heatmap")
+    plt.show()
+
+    # Train Random Forest
+    print("\n--- Random Forest Feature Importances ---")
+    X = df[FEATURE_COLUMNS]
+    y = df[TARGET]
+    rf = RandomForestRegressor(n_estimators=100, random_state=42)
+    rf.fit(X, y)
+    importances = pd.Series(rf.feature_importances_, index=FEATURE_COLUMNS).sort_values()
+    print(importances.sort_values(ascending=False))
+
+    # Plot Importances
+    importances.plot(kind='barh', figsize=(10, 6), title='Random Forest Feature Importances')
+    plt.xlabel("Importance")
+    plt.show()
+
+    # Train Linear Model for baseline R^2
+    print("\n--- Linear Regression Model Summary ---")
+    lm = LinearRegression()
+    lm.fit(X, y)
+    y_pred = lm.predict(X)
+    r2 = r2_score(y, y_pred)
+    print(f"Linear Regression R^2: {r2:.4f}")
+
+

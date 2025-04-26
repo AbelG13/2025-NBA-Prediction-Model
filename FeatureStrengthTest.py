@@ -7,10 +7,12 @@ from sklearn.metrics import r2_score
 
 # --- CONFIGURABLE PARAMS ---
 TARGET = 'PTS'
-FEATURE_COLUMNS = ['avg_fgm_5g', 'avg_ftm_5g', 'avg_fta_5g', 'avg_pts_5g', 'avg_min_5g', 
-'avg_fga_5g', 'std_fta_5g', 'OPP_DREB', 'OPP_BLK','home_or_away',
-'OPP_DEFLECTIONS','OPP_FG_PCT_RANK', 'avg_fga_5g_squared','avg_fga_5g_avg_pts_5g',
-'avg_fga_5g_avg_min_5g', 'std_fta_5g', 'OPP_DREB', 'OPP_BLK', 'OPP_DEFLECTIONS','OPP_FG_PCT_RANK']
+FEATURE_COLUMNS = ['avg_pts_5g', 'avg_min_5g', 'avg_fga_5g', 'avg_fgm_5g', 'avg_fta_5g', 'avg_ftm_5g', 'std_fta_5g','pts_prev_game',
+    'pts_prev_game_per_min', 'pts_prev_game_per_min_squared', 'avg_fga_5g_squared', 'avg_fga_5g_avg_pts_5g',
+    'avg_fga_5g_avg_min_5g', 'ppg', 'ppg_squared', 'days_since_last_game', 'home_or_away', 
+    'avg_efg_pct_2g','avg_ts_pct_2g', 'avg_usg_pct_2g',  'avg_off_rating_2g','avg_oreb_pct_3g','pie_prev_game','OPP_BOX_OUTS', 
+    'OPP_DREB', 'OPP_BLK', 'OPP_DEFLECTIONS','OPP_FG_PCT_RANK', 'Position_Guard-Forward', 
+    'Position_Center', 'Position_Guard','Position_Forward', 'START_POSITION' ]
 
 # --- MAIN FUNCTION ---
 def analyze_feature_strength(df):

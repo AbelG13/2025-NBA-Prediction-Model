@@ -1,24 +1,26 @@
 # 🏀 NBA Player Points Prediction Model (2025 Season)
 
-This project is focused on building a machine learning model using data from the 2025 NBA regular season to **predict how many points a player will score in an upcoming game** with the goal of having a reliable system ready to deploy for the **2025 NBA Playoffs**.
+This project builds a machine learning model using data from the 2025 NBA regular season to **predict how many points a player will score in an upcoming game**, aiming to have a reliable system ready for the **2025 NBA Playoffs**.
 
 ## 📌 Project Goal
 
-To create a robust, real-time model that can:
+Create a robust, near-real-time prediction model that can:
 - Analyze player and team trends
 - Engineer predictive features from game logs and opponent tendencies
-- Forecast player point totals using historical and contextual data
+- Forecast player point totals using only historical and contextual data
 
 ---
 
 ## 🧠 Project Overview
 
-This project uses the [`nba_api`](https://github.com/swar/nba_api) to gather real NBA game log data and engineer features for training a machine learning model.
+This project uses the [`nba_api`](https://github.com/swar/nba_api) to collect real NBA game log and advanced box score data, which is processed into model-ready features for training.
 
-The model is trained to predict `PTS` (points scored in a game) for each player on a given team using:
-- Their **last 5 games' performance**
-- Opponent **defensive metrics**
-- Game context (e.g., home/away, rest days)
+Key aspects:
+- Player performance across recent games
+- Opponent defensive metrics
+- Game-specific context (e.g., home/away splits)
+
+The model has transitioned to **XGBoost** for its superior handling of non-linear feature interactions, regularization capabilities, and robustness against overfitting, outperforming previous Random Forest models.
 
 ---
 
@@ -26,38 +28,38 @@ The model is trained to predict `PTS` (points scored in a game) for each player 
 
 | File | Description |
 |------|-------------|
-| `QualifyingPlayers.py` | Identifies players who qualify based on minutes played in recent games |
-| `CreateFeatures.py` | Builds rolling stat features (e.g., avg points over last 5 games) for a given player |
-| `CreateTeamDF.py` | Assembles a full training DataFrame for all qualifying players on a team |
-| `FeatureStrengthTest.py` | Tests correlation and importance of features against the target variable (`PTS`) |
-| `PredictionModel.py` | Trains a `RandomForestRegressor` and evaluates performance (MAE, R²) |
-| `main.py` | Main entry point for running model training and feature tests |
+| `AddPositions.py` | Adds player position information to the dataset |
+| `AdvancedCSV.py` | Gathers and cleans advanced box score statistics |
+| `CreateFeatures.py` | Builds rolling averages, interaction terms, and engineered features for each player |
+| `FeatureStrengthTest.py` | Tests the correlation and importance of engineered features |
+| `PredictionModel.py` | Trains the XGBoost regression model and tunes it using cross-validation and grid search |
+| `main.py` | Main script to prepare data, train the model, and evaluate results |
 
 ---
 
 ## 🧪 Current Results
 
-- ✅ Data leakage removed by only using past games to predict future ones
-- ✅ Interaction terms (e.g., `avg_fga_5g * avg_pts_5g`) and non-linear transforms (e.g., `avg_fga_5g²`) added
-- 📉 Model currently far below desired R² value, indicating room for feature improvement
+- ✅ Data leakage eliminated by using only historical information when predicting
+- ✅ Feature engineering expanded with weighted rolling averages, opponent-adjusted metrics, and interaction terms
+- ✅ Switched to XGBoost, tuned hyperparameters, and achieved a **current R² of 0.74**
+- ⚠️ Major Challenge: The `nba_api` data appears to update only **monthly**, not daily, making it difficult to maintain live predictions without manual intervention
 
 ---
 
 ## 🔮 Next Steps
 
-- Improve feature engineering with deeper contextual stats
-- Test additional models: LightGBM, XGBoost, Ridge regression
-- Incorporate betting odds and Vegas totals
-- Optimize for live game-day prediction use
+- Develop strategies to supplement or verify live data sources beyond `nba_api`
+- Further refine feature creation, particularly opponent adjustment features
+- Expand model evaluation on playoff game logs once data becomes available
 
 ---
 
 ## 💡 Why This Matters
 
-Accurately forecasting player scoring has applications in:
-- DFS (daily fantasy sports)
-- NBA prop betting
-- Game simulations & commentary
-- Data journalism and fan engagement
+Accurate player scoring predictions power:
+- DFS (daily fantasy sports) optimization
+- NBA prop betting models
+- Realistic game simulations
+- Sports journalism, fan engagement, and analytics products
 
 ---
